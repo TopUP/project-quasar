@@ -11,36 +11,51 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
+        <q-toolbar-title>Q-To-Do {{ todayDate }}</q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
     </q-header>
 
     <q-drawer
       v-model="leftDrawerOpen"
       show-if-above
-      bordered
+      :width="200"
+      :breakpoint="400"
     >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
+      <q-scroll-area style="height: calc(100% - 150px); margin-top: 150px; border-right: 1px solid #ddd">
+        <q-list padding>
+          <q-item to="/" exact clickable v-ripple>
+            <q-item-section avatar><q-icon name="list" /></q-item-section>
+            <q-item-section>ToDo</q-item-section>
+          </q-item>
 
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
+          <q-item to="/help" exact clickable v-ripple>
+            <q-item-section avatar><q-icon name="help" /></q-item-section>
+            <q-item-section>Help</q-item-section>
+          </q-item>
+
+          <q-item to="/about" exact clickable v-ripple>
+            <q-item-section avatar><q-icon name="link" /></q-item-section>
+            <q-item-section>About</q-item-section>
+          </q-item>
+        </q-list>
+      </q-scroll-area>
+
+      <q-img class="absolute-top image" style="height: 150px">
+        <div class="absolute-bottom bg-transparent">
+          <q-avatar size="56px" class="q-mb-sm">
+            <img src="https://cdn.quasar.dev/img/boy-avatar.png">
+          </q-avatar>
+          <div class="text-weight-bold">Todo Master</div>
+          <div>@todo_master</div>
+        </div>
+      </q-img>
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <keep-alive>
+        <router-view />
+      </keep-alive>
     </q-page-container>
   </q-layout>
 </template>
@@ -48,6 +63,7 @@
 <script>
 import { defineComponent, ref } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
+import {date} from 'quasar'
 
 const linksList = [
   {
@@ -111,6 +127,17 @@ export default defineComponent({
         leftDrawerOpen.value = !leftDrawerOpen.value
       }
     }
+  },
+  computed: {
+    todayDate() {
+      return date.formatDate(Date.now(), 'dddd D MMMM')
+    }
   }
 })
 </script>
+
+<style scoped lang="scss">
+.image {
+  background-color: $primary;
+}
+</style>
